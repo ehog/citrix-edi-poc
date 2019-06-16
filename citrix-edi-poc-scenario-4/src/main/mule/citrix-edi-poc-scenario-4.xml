@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:as2="http://www.mulesoft.org/schema/mule/as2" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="citrix-edi-poc-scenario-4Flow" doc:id="2d431a4a-213e-4391-bf5c-1dd2964f8ae9" >
+		<scheduler doc:name="Scheduler" doc:id="6bc593b8-4f26-4dfb-b8a2-396a2f97e70c" >
+			<scheduling-strategy >
+				<fixed-frequency />
+			</scheduling-strategy>
+		</scheduler>
+		<sftp:read doc:name="Read" doc:id="38105d67-d13a-42d1-b590-e02b7f84dc45" />
+		<ee:transform doc:name="Transform Message" doc:id="fdbea3b8-2d7f-42f8-aa5e-42c5b1df38b1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="d4da6c54-f73d-4784-a44c-e6a2c5386528" />
+		<as2:send doc:name="Send" doc:id="740ad629-4910-4a80-8be6-3636b3d4c645" />
+	</flow>
+	<sub-flow name="citrix-edi-poc-scenario-4Sub_Flow" doc:id="0409d3c9-0edb-4d76-bbf7-5d2b10e4b993" >
+		<db:select doc:name="Select" doc:id="0a4bb269-e2db-4509-99d2-b79723deffe4" />
+	</sub-flow>
+</mule>

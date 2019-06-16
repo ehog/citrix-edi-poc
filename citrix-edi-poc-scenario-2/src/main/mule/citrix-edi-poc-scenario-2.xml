@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns:as2="http://www.mulesoft.org/schema/mule/as2"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:sap="http://www.mulesoft.org/schema/mule/sap" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/sap http://www.mulesoft.org/schema/mule/sap/current/mule-sap.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd">
+	<flow name="citrix-edi-poc-scenario-2Flow" doc:id="891f74cc-b0f5-40a4-ac5f-f7a2cfbb0df9" >
+		<sap:document-source operationTimeout="0" doc:name="Document source" doc:id="5925bfdd-e93b-467a-bf0e-55927a7d35fd" />
+		<ee:transform doc:name="Transform Message" doc:id="de388e38-8548-4f74-861f-cbfca98a6c56" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="1224a900-e9b0-4606-8cd4-d1da5db3c2b4" />
+		<choice doc:name="Choice" doc:id="bc15b9f1-f3f3-44c2-a24d-31ac861ff0d5" >
+			<when >
+				<ee:transform doc:name="Transform Message" doc:id="9a493066-1862-4169-9599-302bd0b616ec" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<as2:send doc:name="Send" doc:id="f090aedd-0484-4006-9ce6-18f29a8bef7c" />
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="b3d2e4ab-7606-49a8-bdb6-3d014f97a778" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<sftp:write doc:name="Write" doc:id="4f088d81-8f7f-45a6-8746-55216607d125" />
+			</otherwise>
+		</choice>
+	</flow>
+	<sub-flow name="citrix-edi-poc-scenario-2Sub_Flow" doc:id="5e09bd13-2309-4efe-a7fe-2e12b5082a8c" >
+		<db:select doc:name="Select" doc:id="8130ea1a-7420-400c-880f-b3cf1d73c8d2" />
+	</sub-flow>
+</mule>

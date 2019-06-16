@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:as2="http://www.mulesoft.org/schema/mule/as2" xmlns:x12="http://www.mulesoft.org/schema/mule/x12"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/x12 http://www.mulesoft.org/schema/mule/x12/current/mule-x12.xsd
+http://www.mulesoft.org/schema/mule/as2 http://www.mulesoft.org/schema/mule/as2/current/mule-as2.xsd">
+	<flow name="citrix-edi-poc-scenario-0Flow" doc:id="d0ba5066-1b0d-48d4-a683-2c629845ced2" >
+		<scheduler doc:name="Scheduler" doc:id="922d1718-640e-4ad5-b141-76a1d85efe2a" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10" timeUnit="MINUTES"/>
+			</scheduling-strategy>
+		</scheduler>
+		<sftp:read doc:name="Read" doc:id="98461854-c887-4b4e-bee1-79036803b19b" />
+		<x12:write doc:name="Write" doc:id="ab7fbdc2-f53a-4ab0-8b86-da91996e6324" />
+		<as2:send timeout="0" doc:name="Send" doc:id="d4568056-edca-4f20-b9c8-f68395e7046f" />
+	</flow>
+</mule>
