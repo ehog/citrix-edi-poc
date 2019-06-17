@@ -16,7 +16,7 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 		</x12:schemas>
 	</x12:config>
 	<as2:config name="AS2_Config" doc:name="AS2 Config" doc:id="a42f3b68-79ec-40e1-a258-800f69aae91d" >
-		<as2:connection namePartnerFrom="MULESEND" as2IdPartnerFrom="1" emailPartnerFrom="someone@some.com" namePartnerTo="MULERECEIVE" as2IdPartnerTo="2" emailPartnerTo="someone@some.com" subject="PO" x509aliasPartnerFrom="mule" x509aliasPartnerTo="mule" keyStorePath="keystore.jks" keyPassword="password" as2Url="${as2.as2Url}" secureReceiverPort="${https.port}" secureReceiverKeystorePath="keystore.jks" secureReceiverKeystorePassword="password" receiverHost="0.0.0.0"/>
+		<as2:connection namePartnerFrom="MULESEND" as2IdPartnerFrom="1" emailPartnerFrom="someone@some.com" namePartnerTo="MULERECEIVE" as2IdPartnerTo="2" emailPartnerTo="someone@some.com" subject="PO" x509aliasPartnerFrom="mule" x509aliasPartnerTo="mule" keyStorePath="keystore.jks" keyPassword="password" as2Url="${as2.as2Url}" secureReceiverKeystorePath="keystore.jks" secureReceiverKeystorePassword="password" receiverHost="${as2.receiver.host}" secureReceiverPort="${https.port}"/>
 	</as2:config>
 	<configuration-properties doc:name="Configuration properties" doc:id="5afb8f1a-e135-4b89-b656-e1ca0cd6379d" file="config/configuration.yaml" />
 	<flow name="citrix-edi-poc-scenario-1Flow" doc:id="1f0a041e-3b50-40e9-aac2-6b697d73e858" >

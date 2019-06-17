@@ -1,5 +1,7 @@
 as2:
-  as2Url: "https://0.0.0.0:8082"
+  #as2Url: "https://edi-test-case-1-1312354u504u.us-e2.cloudhub.io:443"
+  as2Url: "/as2"
+  receiver:
+    host: "0.0.0.0"
 https:
-  port: "8082"
-  
+  port: "8081"
