@@ -1,20 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:as2="http://www.mulesoft.org/schema/mule/as2" xmlns:x12="http://www.mulesoft.org/schema/mule/x12"
-	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:as2="http://www.mulesoft.org/schema/mule/as2"
+	xmlns:x12="http://www.mulesoft.org/schema/mule/x12" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/x12 http://www.mulesoft.org/schema/mule/x12/current/mule-x12.xsd
-http://www.mulesoft.org/schema/mule/as2 http://www.mulesoft.org/schema/mule/as2/current/mule-as2.xsd">
+http://www.mulesoft.org/schema/mule/as2 http://www.mulesoft.org/schema/mule/as2/current/mule-as2.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+	<x12:config name="X12_EDI_Config" doc:name="X12 EDI Config" doc:id="dab81232-6fd1-4e91-8ef7-857972ddcda1" enforceSegmentOrder="false" requireUniqueInterchanges="false">
+		<x12:schemas >
+			<x12:schema value="/x12/004010/850.esl" />
+		</x12:schemas>
+	</x12:config>
+	<as2:config name="AS2_Config" doc:name="AS2 Config" doc:id="b57b10b4-0a7c-471c-9c48-b90671c97098" >
+		<as2:connection namePartnerFrom="MULESEND" as2IdPartnerFrom="1" emailPartnerFrom="someone@some.com" namePartnerTo="MULERECEIVE" as2IdPartnerTo="2" emailPartnerTo="someone@some.com" subject="PO" x509aliasPartnerFrom="mule" x509aliasPartnerTo="mule" keyStorePath="keystore.jks" keyPassword="password" as2Url="${as2.as2Url}" secureReceiverPort="${as2.secureReceiverPort}" secureReceiverKeystorePath="keystore.jks" secureReceiverKeystorePassword="password"/>
+	</as2:config>
+	<sftp:config name="SFTP_Config" doc:name="SFTP Config" doc:id="884c917a-ef5f-4054-82c2-06e7e18a24b6" >
+		<sftp:connection host="sftp.shared.demos.mulesoft.com" username="sftp" password="Mule!123"/>
+	</sftp:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="78c39d5d-3383-430d-892a-2a5992c51f53" file="config/configuration.yaml" />
 	<flow name="citrix-edi-poc-scenario-0Flow" doc:id="d0ba5066-1b0d-48d4-a683-2c629845ced2" >
-		<scheduler doc:name="Scheduler" doc:id="922d1718-640e-4ad5-b141-76a1d85efe2a" >
-			<scheduling-strategy >
-				<fixed-frequency frequency="10" timeUnit="MINUTES"/>
+		<sftp:listener doc:name="On New or Updated File" doc:id="f38db9e5-0129-4bbc-8ff4-382261527cc5" config-ref="SFTP_Config" autoDelete="true" directory="asherry/">
+			<scheduling-strategy>
+				<fixed-frequency frequency="30" timeUnit="SECONDS" />
 			</scheduling-strategy>
-		</scheduler>
-		<sftp:read doc:name="Read" doc:id="98461854-c887-4b4e-bee1-79036803b19b" />
-		<x12:write doc:name="Write" doc:id="ab7fbdc2-f53a-4ab0-8b86-da91996e6324" />
-		<as2:send timeout="0" doc:name="Send" doc:id="d4568056-edca-4f20-b9c8-f68395e7046f" />
+			<sftp:matcher filenamePattern="*.edi" />
+		</sftp:listener>
+		<tracking:custom-event doc:name="Custom Business Event" doc:id="9b4de7e9-d2df-4ebd-8bda-ba42276d8283" event-name="EDI Send">
+			<tracking:meta-data key="Sending EDI Contents" value="850 file" />
+		</tracking:custom-event>
+		<x12:read doc:name="Read" doc:id="210ba39a-3c86-4294-bd30-09c8557b6324" config-ref="X12_EDI_Config"/>
+		<as2:send timeout="30" doc:name="Send" doc:id="6fd7489b-f903-4fb6-abd2-452875985a6e" input="#[payload]" fileName="AS2_2019-06-14T002934_{667F2C7C-A6BE-4694-A2A6-135EF84E09F6}.edi" config-ref="AS2_Config"/>
 	</flow>
 </mule>
