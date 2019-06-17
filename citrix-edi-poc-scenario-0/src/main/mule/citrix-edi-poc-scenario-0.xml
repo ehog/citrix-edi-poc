@@ -33,15 +33,25 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 		
 		<sftp:listener doc:name="On New or Updated File" doc:id="f38db9e5-0129-4bbc-8ff4-382261527cc5" config-ref="SFTP_Config" autoDelete="true" directory="asherry/">
 			<scheduling-strategy>
-				<fixed-frequency frequency="30" timeUnit="SECONDS" />
+				<fixed-frequency frequency="5" timeUnit="SECONDS" />
 			</scheduling-strategy>
 			<sftp:matcher filenamePattern="*.edi" />
 		</sftp:listener>
 		<tracking:custom-event doc:name="Custom Business Event" doc:id="9b4de7e9-d2df-4ebd-8bda-ba42276d8283" event-name="EDI Send">
 			<tracking:meta-data key="Sending EDI Contents" value="850 file" />
 		</tracking:custom-event>
+		<ee:transform doc:name="Transform Message" doc:id="db424733-e112-40cd-b6d4-b454513a87e1">
+			<ee:message>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="filename" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.fileName]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
 		<x12:read doc:name="Read" doc:id="210ba39a-3c86-4294-bd30-09c8557b6324" config-ref="X12_EDI_Config"/>
 		<x12:write doc:name="Write" doc:id="55977d99-2e1d-465f-a54f-7345bdef9968" config-ref="X12_EDI_Config"/>
-		<as2:send timeout="30" doc:name="Send" doc:id="6fd7489b-f903-4fb6-abd2-452875985a6e" input="#[payload]" fileName="AS2.edi" config-ref="AS2_Config"/>
+		<as2:send timeout="30" doc:name="Send" doc:id="6fd7489b-f903-4fb6-abd2-452875985a6e" input="#[payload]" config-ref="AS2_Config" fileName="#[vars.filename]"/>
 	</flow>
 </mule>

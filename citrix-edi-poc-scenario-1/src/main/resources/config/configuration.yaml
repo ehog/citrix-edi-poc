@@ -1,6 +1,6 @@
 as2:
-  as2Url: "/as2"
+  as2Url: "/as2/receive1"
   receiver:
     host: "0.0.0.0"
 https:
-  port: "8081"
+  port: "8082"
