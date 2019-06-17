@@ -15,7 +15,7 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 		</x12:schemas>
 	</x12:config>
 	<as2:config name="AS2_Config" doc:name="AS2 Config" doc:id="b57b10b4-0a7c-471c-9c48-b90671c97098" >
-		<as2:connection namePartnerFrom="MULESEND" as2IdPartnerFrom="1" emailPartnerFrom="someone@some.com" namePartnerTo="MULERECEIVE" as2IdPartnerTo="2" emailPartnerTo="someone@some.com" subject="PO" x509aliasPartnerFrom="mule" x509aliasPartnerTo="mule" keyStorePath="keystore.jks" keyPassword="password" as2Url="${as2.as2Url}" secureReceiverPort="${https.port}" secureReceiverKeystorePath="keystore.jks" secureReceiverKeystorePassword="password"/>
+		<as2:connection namePartnerFrom="MULESEND" as2IdPartnerFrom="1" emailPartnerFrom="someone@some.com" namePartnerTo="MULERECEIVE" as2IdPartnerTo="2" emailPartnerTo="someone@some.com" subject="PO" x509aliasPartnerFrom="mule" x509aliasPartnerTo="mule" keyStorePath="keystore.jks" keyPassword="password" as2Url="${as2.as2Url}" secureReceiverPort="${https.port}" secureReceiverKeystorePath="keystore.jks" secureReceiverKeystorePassword="password" receiverHost="0.0.0.0"/>
 	</as2:config>
 	<sftp:config name="SFTP_Config" doc:name="SFTP Config" doc:id="884c917a-ef5f-4054-82c2-06e7e18a24b6" >
 		<sftp:connection host="sftp.shared.demos.mulesoft.com" username="sftp" password="Mule!123"/>
@@ -32,6 +32,6 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 			<tracking:meta-data key="Sending EDI Contents" value="850 file" />
 		</tracking:custom-event>
 		<x12:read doc:name="Read" doc:id="210ba39a-3c86-4294-bd30-09c8557b6324" config-ref="X12_EDI_Config"/>
-		<as2:send timeout="30" doc:name="Send" doc:id="6fd7489b-f903-4fb6-abd2-452875985a6e" input="#[payload]" fileName="AS2_2019-06-14T002934_{667F2C7C-A6BE-4694-A2A6-135EF84E09F6}.edi" config-ref="AS2_Config"/>
+		<as2:send timeout="30" doc:name="Send" doc:id="6fd7489b-f903-4fb6-abd2-452875985a6e" input="#[payload]" fileName="AS2.edi" config-ref="AS2_Config"/>
 	</flow>
 </mule>

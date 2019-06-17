@@ -1,5 +1,5 @@
 as2:
-  as2Url: "https://edi-test-case-1-1312354u504u.us-e2.cloudhub.io"
+  as2Url: "https://edi-test-case-1-1312354u504u.us-e2.cloudhub.io:443"
 https:
-  port: "443"
+  port: "8082"
   
