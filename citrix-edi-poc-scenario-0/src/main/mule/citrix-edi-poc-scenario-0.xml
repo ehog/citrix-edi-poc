@@ -21,7 +21,16 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 		<sftp:connection host="sftp.shared.demos.mulesoft.com" username="sftp" password="Mule!123"/>
 	</sftp:config>
 	<configuration-properties doc:name="Configuration properties" doc:id="78c39d5d-3383-430d-892a-2a5992c51f53" file="config/configuration.yaml" />
-	<!-- flow name="citrix-edi-poc-scenario-0Flow" doc:id="d0ba5066-1b0d-48d4-a683-2c629845ced2" >
+	<file:config name="File_Config" doc:name="File Config" doc:id="ea13986a-6e6a-4217-b2a4-29e00310ea3d" />
+	<flow name="citrix-edi-poc-scenario-0Flow" doc:id="d0ba5066-1b0d-48d4-a683-2c629845ced2" >
+		
+		<!-- scheduler doc:name="Scheduler" doc:id="b3392b31-00c7-4079-843f-3c90c37130c0" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="10000"/>
+			</scheduling-strategy>
+		</scheduler>
+		<file:read doc:name="Read" doc:id="79103155-a958-49b0-ae39-e276185dbce6" config-ref="File_Config" path="/Users/asherry/workspace7/citrix-edi-poc/citrix-edi-poc-scenario-0/src/test/resources/850/AS2_2019-06-14T002934_{667F2C7C-A6BE-4694-A2A6-135EF84E09F6}.edi"/ -->
+		
 		<sftp:listener doc:name="On New or Updated File" doc:id="f38db9e5-0129-4bbc-8ff4-382261527cc5" config-ref="SFTP_Config" autoDelete="true" directory="asherry/">
 			<scheduling-strategy>
 				<fixed-frequency frequency="30" timeUnit="SECONDS" />
@@ -32,21 +41,7 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 			<tracking:meta-data key="Sending EDI Contents" value="850 file" />
 		</tracking:custom-event>
 		<x12:read doc:name="Read" doc:id="210ba39a-3c86-4294-bd30-09c8557b6324" config-ref="X12_EDI_Config"/>
-		<as2:send timeout="30" doc:name="Send" doc:id="6fd7489b-f903-4fb6-abd2-452875985a6e" input="#[payload]" fileName="AS2.edi" config-ref="AS2_Config"/>
-	</flow-->
-	<file:config name="File_Config" doc:name="File Config" doc:id="ea13986a-6e6a-4217-b2a4-29e00310ea3d" />
-	<flow name="citrix-edi-poc-scenario-0Flow" doc:id="d0ba5066-1b0d-48d4-a683-2c629845ced2" >
-		
-		<scheduler doc:name="Scheduler" doc:id="b3392b31-00c7-4079-843f-3c90c37130c0" >
-			<scheduling-strategy >
-				<fixed-frequency frequency="10000"/>
-			</scheduling-strategy>
-		</scheduler>
-		<file:read doc:name="Read" doc:id="79103155-a958-49b0-ae39-e276185dbce6" config-ref="File_Config" path="/Users/asherry/workspace7/citrix-edi-poc/citrix-edi-poc-scenario-0/src/test/resources/850/AS2_2019-06-14T002934_{667F2C7C-A6BE-4694-A2A6-135EF84E09F6}.edi"/>
-		<tracking:custom-event doc:name="Custom Business Event" doc:id="9b4de7e9-d2df-4ebd-8bda-ba42276d8283" event-name="EDI Send">
-			<tracking:meta-data key="Sending EDI Contents" value="850 file" />
-		</tracking:custom-event>
-		<x12:read doc:name="Read" doc:id="210ba39a-3c86-4294-bd30-09c8557b6324" config-ref="X12_EDI_Config"/>
+		<x12:write doc:name="Write" doc:id="55977d99-2e1d-465f-a54f-7345bdef9968" config-ref="X12_EDI_Config"/>
 		<as2:send timeout="30" doc:name="Send" doc:id="6fd7489b-f903-4fb6-abd2-452875985a6e" input="#[payload]" fileName="AS2.edi" config-ref="AS2_Config"/>
 	</flow>
 </mule>
