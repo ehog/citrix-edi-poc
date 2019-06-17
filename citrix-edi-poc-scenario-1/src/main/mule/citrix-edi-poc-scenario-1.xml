@@ -1,41 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:sap="http://www.mulesoft.org/schema/mule/sap" xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns:db="http://www.mulesoft.org/schema/mule/db"
-	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:x12="http://www.mulesoft.org/schema/mule/x12" xmlns:as2="http://www.mulesoft.org/schema/mule/as2" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:sap="http://www.mulesoft.org/schema/mule/sap"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:x12="http://www.mulesoft.org/schema/mule/x12" xmlns:as2="http://www.mulesoft.org/schema/mule/as2" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/sap http://www.mulesoft.org/schema/mule/sap/current/mule-sap.xsd">
+http://www.mulesoft.org/schema/mule/sap http://www.mulesoft.org/schema/mule/sap/current/mule-sap.xsd
+http://www.mulesoft.org/schema/mule/as2 http://www.mulesoft.org/schema/mule/as2/current/mule-as2.xsd
+http://www.mulesoft.org/schema/mule/x12 http://www.mulesoft.org/schema/mule/x12/current/mule-x12.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+	<x12:config name="X12_EDI_Config" doc:name="X12 EDI Config" doc:id="269ebed2-bd9c-42a1-be66-db88d74f7da8" enforceSegmentOrder="false" requireUniqueInterchanges="false">
+		<x12:schemas >
+			<x12:schema value="/x12/004010/850.esl" />
+		</x12:schemas>
+	</x12:config>
+	<as2:config name="AS2_Config" doc:name="AS2 Config" doc:id="a42f3b68-79ec-40e1-a258-800f69aae91d" >
+		<as2:connection namePartnerFrom="MULESEND" as2IdPartnerFrom="1" emailPartnerFrom="someone@some.com" namePartnerTo="MULERECEIVE" as2IdPartnerTo="2" emailPartnerTo="someone@some.com" subject="PO" x509aliasPartnerFrom="mule" x509aliasPartnerTo="mule" keyStorePath="keystore.jks" keyPassword="password" as2Url="${as2.as2Url}" secureReceiverPort="${https.port}" secureReceiverKeystorePath="keystore.jks" secureReceiverKeystorePassword="password"/>
+	</as2:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="5afb8f1a-e135-4b89-b656-e1ca0cd6379d" file="config/configuration.yaml" />
 	<flow name="citrix-edi-poc-scenario-1Flow" doc:id="1f0a041e-3b50-40e9-aac2-6b697d73e858" >
-		<as2:receive doc:name="Receive" doc:id="f078717b-71f6-4574-9f06-af4aac7dbb15" />
+		<as2:receive doc:name="Receive" doc:id="f078717b-71f6-4574-9f06-af4aac7dbb15" config-ref="AS2_Config"/>
 		<x12:read doc:name="Read" doc:id="72e9f280-4651-4bc9-ad1d-1daee478fb04" />
-		<ee:transform doc:name="Transform Message" doc:id="6be0ea93-6f1a-408c-882e-75df1e580edb" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/java
----
-{
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<flow-ref doc:name="Flow Reference" doc:id="a69b99a2-1af0-4a7d-9a72-cc0a48afc9c3" name="db_callout"/>
-		<flow-ref doc:name="Flow Reference" doc:id="8d969e08-f9cb-483c-b79f-43b6bf323248" name="api_callout"/>
-		<ee:transform doc:name="Transform Message" doc:id="27611dd2-e9cc-45b2-9553-c2909a5bf991" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/java
----
-{
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-		<sap:send doc:name="Send IDoc" doc:id="39b0a0a8-8943-4f7f-8f96-92605e37149a" />
+		<tracking:custom-event doc:name="Custom Business Event" doc:id="321504c7-14a3-4ba0-b586-34ffee9341a0" event-name="EDI Event">
+			<tracking:meta-data key="Receiving 850 Event" value="850 file"/>
+		</tracking:custom-event>
+		<logger level="INFO" doc:name="Logger" doc:id="970dcd4d-12e2-4f6f-902e-2b790716e5cb" message="#[payload]"/>
 	</flow>
-	<sub-flow name="db_callout" doc:id="b18ec956-96be-4f24-962d-7eb7951927c4" >
-		<db:select doc:name="Select" doc:id="701026cd-c074-4be9-8c11-5ec0b1deed76" />
-	</sub-flow>
-	<sub-flow name="api_callout" doc:id="971f5a01-0c8a-4b6e-9114-d8cff4273ad6" >
-		<http:request method="GET" doc:name="Request" doc:id="50ae323c-9d0a-496c-b051-bfdfa2b63aec" />
-	</sub-flow>
 </mule>
