@@ -1,4 +1,5 @@
 as2:
-  as2Url: "https://edi-test-case-1-1312354u504u.us-e2.cloudhub.io:8082"
-  secureReceiverPort: "8082"
+  as2Url: "https://edi-test-case-1-1312354u504u.us-e2.cloudhub.io"
+https:
+  port: "443"
   
