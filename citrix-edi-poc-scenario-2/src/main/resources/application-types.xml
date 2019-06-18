@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="xml_810" format="xml">
+      <types:example format="xml" element="{http://schemas.microsoft.com/BizTalk/EDI/X12/2006}X12_00401_810" location="examples/C4303204_2019-06-13 T14.28.47.1801_143ef78a-95c3-4c35-83ea-66a8cbd82245_810.xml"/>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#97161c71-7b14-4ce7-8372-38bf1f170d57">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="xml_810"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
