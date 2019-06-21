@@ -3,12 +3,14 @@ Contains all of the projects necessary for the EDI PoC for Citrix
 
 ## Project list
 1. Test Scenario 0
- Picking up 850 messages and sending via AS2
+ Read an EDI X12.850 (Purchase Order) file from a repository, validate the X12
+structure and send the message out via AS2, sending the message encrypted.
 2. Test Scenario 1
- Receive batch of 850s, validate data & send to SAP
+ Receive a batch of EDI X12.850 (Purchase Order) over an AS2 connection,
+decompose the POs into single items, convert the POs into an XML format and
+write them out to a repository.
 3. Test Scenario 2
- Send 997 Acknowledgement for 850 from SAP response
-4. Test Scenario 3
- Receive SAP iDoc, convert to 855
-5. Test Scenario 4
- Receive XML invoices, transform to X12 & send via AS2
+ Read an XML containing Invoice data from a repository, convert the XML to an
+EDI X12.810 structure, lookup the partner in a database to determine the
+desired sending transport and route the message to the appropriate outbound
+channel.
